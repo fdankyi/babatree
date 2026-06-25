@@ -8,18 +8,39 @@
 <meta name="apple-mobile-web-app-title" content="Baba Tree"/>
 <title>The Baba Tree - Order Tool</title>
 <script>
+/* Shows a real error ONLY if the app fails to load. Harmless errors are ignored. */
+(function () {
+  function appLoaded() {
+    var r = document.getElementById('root');
+    return r && r.children && r.children.length > 0;
+  }
+  function showError(detail) {
+    if (appLoaded()) return; /* app is on screen - do not disturb it */
+    if (!document.body) return;
+    document.body.innerHTML =
+      '<pre style="padding:16px;white-space:pre-wrap;font-size:15px;font-family:monospace">' +
+      'The app could not start.\n\n' + detail +
+      '\n\nFirst try: connect to the internet and open the app once, then try again.\n' +
+      'If it keeps failing, send this photo to your developer.</pre>';
+  }
+  window.addEventListener('error', function (e) {
+    var d = (e.error && (e.error.stack || e.error.message)) || e.message || 'Unknown error';
+    if (e.filename) { d += '\n(' + e.filename + ' line ' + (e.lineno || 0) + ')'; }
+    setTimeout(function () { showError(d); }, 1500);
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e.reason;
+    var d = (r && (r.stack || r.message)) || String(r);
+    setTimeout(function () { showError('Background error: ' + d); }, 1500);
+  });
+})();
+
 /* Registers the offline helper so the app keeps a copy on the device */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').catch(function () {});
   });
 }
-</script>
-<script>
-/* Shows real errors on screen instead of a blank white page (helpful on iPad) */
-window.onerror = function(msg, src, line, col) {
-  document.body.innerHTML = '<pre style="padding:16px;white-space:pre-wrap;font-size:16px;font-family:monospace">App error:\n' + msg + '\nLine: ' + line + (col ? ':' + col : '') + '\n\nIf you see this, take a photo and send it to your developer.</pre>';
-};
 </script>
 <style id="tailwind-offline">
 *,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.col-span-1{grid-column:span 1/span 1}.col-span-12{grid-column:span 12/span 12}.col-span-2{grid-column:span 2/span 2}.col-span-3{grid-column:span 3/span 3}.col-span-4{grid-column:span 4/span 4}.col-span-6{grid-column:span 6/span 6}.mx-1{margin-left:.25rem;margin-right:.25rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.ml-2{margin-left:.5rem}.ml-auto{margin-left:auto}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-8{margin-top:2rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-7{height:1.75rem}.h-9{height:2.25rem}.min-h-screen{min-height:100vh}.w-20{width:5rem}.w-24{width:6rem}.w-28{width:7rem}.w-40{width:10rem}.w-7{width:1.75rem}.w-9{width:2.25rem}.w-full{width:100%}.min-w-\[200px\]{min-width:200px}.max-w-2xl{max-width:42rem}.max-w-5xl{max-width:64rem}.max-w-sm{max-width:24rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.cursor-pointer{cursor:pointer}.grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem*var(--tw-space-y-reverse))}.whitespace-pre-line{white-space:pre-line}.rounded{border-radius:.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-t{border-top-width:1px}.border-t-2{border-top-width:2px}.border-stone-100{--tw-border-opacity:1;border-color:rgb(245 245 244/var(--tw-border-opacity,1))}.border-stone-200{--tw-border-opacity:1;border-color:rgb(231 229 228/var(--tw-border-opacity,1))}.border-stone-300{--tw-border-opacity:1;border-color:rgb(214 211 209/var(--tw-border-opacity,1))}.border-stone-800{--tw-border-opacity:1;border-color:rgb(41 37 36/var(--tw-border-opacity,1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199/var(--tw-bg-opacity,1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-amber-600{--tw-bg-opacity:1;background-color:rgb(217 119 6/var(--tw-bg-opacity,1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254/var(--tw-bg-opacity,1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231/var(--tw-bg-opacity,1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244/var(--tw-bg-opacity,1))}.bg-stone-100{--tw-bg-opacity:1;background-color:rgb(245 245 244/var(--tw-bg-opacity,1))}.bg-stone-50{--tw-bg-opacity:1;background-color:rgb(250 250 249/var(--tw-bg-opacity,1))}.bg-stone-800{--tw-bg-opacity:1;background-color:rgb(41 37 36/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.p-2{padding:.5rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-4{padding-bottom:1rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-wide{letter-spacing:.025em}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14/var(--tw-text-opacity,1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216/var(--tw-text-opacity,1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-stone-300{--tw-text-opacity:1;color:rgb(214 211 209/var(--tw-text-opacity,1))}.text-stone-400{--tw-text-opacity:1;color:rgb(168 162 158/var(--tw-text-opacity,1))}.text-stone-50{--tw-text-opacity:1;color:rgb(250 250 249/var(--tw-text-opacity,1))}.text-stone-500{--tw-text-opacity:1;color:rgb(120 113 108/var(--tw-text-opacity,1))}.text-stone-600{--tw-text-opacity:1;color:rgb(87 83 78/var(--tw-text-opacity,1))}.text-stone-700{--tw-text-opacity:1;color:rgb(68 64 60/var(--tw-text-opacity,1))}.text-stone-800{--tw-text-opacity:1;color:rgb(41 37 36/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.hover\:bg-amber-700:hover{--tw-bg-opacity:1;background-color:rgb(180 83 9/var(--tw-bg-opacity,1))}.hover\:bg-stone-50:hover{--tw-bg-opacity:1;background-color:rgb(250 250 249/var(--tw-bg-opacity,1))}.hover\:bg-stone-700:hover{--tw-bg-opacity:1;background-color:rgb(68 64 60/var(--tw-bg-opacity,1))}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.hover\:text-stone-800:hover{--tw-text-opacity:1;color:rgb(41 37 36/var(--tw-text-opacity,1))}.disabled\:bg-stone-100:disabled{--tw-bg-opacity:1;background-color:rgb(245 245 244/var(--tw-bg-opacity,1))}.disabled\:bg-stone-300:disabled{--tw-bg-opacity:1;background-color:rgb(214 211 209/var(--tw-bg-opacity,1))}.disabled\:opacity-40:disabled{opacity:.4}@media (min-width:640px){.sm\:col-span-1{grid-column:span 1/span 1}.sm\:col-span-2{grid-column:span 2/span 2}.sm\:col-span-6{grid-column:span 6/span 6}.sm\:grid{display:grid}.sm\:w-1\/2{width:50%}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:768px){.md\:block{display:block}}
@@ -663,6 +684,7 @@ const blankCustomer = () => ({
   address: "",
   orderRef: ""
 });
+const cleanName = s => (s || "").replace(/<[^>]*>/g, " ").replace(/&amp;/g, "&").replace(/&#0?39;/g, "'").replace(/&quot;/g, '"').replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 const DEFAULT_PW = "#packingSlip";
 function App() {
   const [unlocked, setUnlocked] = useState(false);
@@ -859,18 +881,27 @@ function App() {
       }
       const headers = rows[0];
       const nameIdx = findCol(headers, ["Item Name", "Product Name", "Lineitem name", "Line Item Name", "Name", "Product"]);
-      const qtyIdx = findCol(headers, ["Quantity", "Lineitem quantity", "Qty"]);
+      const qtyIdx = findCol(headers, ["Quantity (- Refund)", "Quantity", "Lineitem quantity", "Qty"]);
       const priceIdx = findCol(headers, ["Item Cost", "Unit Price", "Lineitem price", "Price", "Item Price"]);
       const custIdx = findCol(headers, ["Customer Name", "Billing Name", "Shipping Name", "Name (Billing)"]);
+      const firstShip = findCol(headers, ["First Name (Shipping)"]);
+      const lastShip = findCol(headers, ["Last Name (Shipping)"]);
+      const firstBill = findCol(headers, ["First Name (Billing)"]);
+      const lastBill = findCol(headers, ["Last Name (Billing)"]);
       const shipStreet = findCol(headers, ["Shipping Street"]);
-      const shipA1 = findCol(headers, ["Shipping Address1", "Shipping Address 1"]);
+      const shipA1 = findCol(headers, ["Shipping Address1", "Shipping Address 1", "Address 1&2 (Shipping)"]);
       const shipA2 = findCol(headers, ["Shipping Address2", "Shipping Address 2"]);
-      const shipCompany = findCol(headers, ["Shipping Company"]);
-      const shipCity = findCol(headers, ["Shipping City"]);
-      const shipZip = findCol(headers, ["Shipping Zip"]);
-      const shipProvince = findCol(headers, ["Shipping Province"]);
-      const shipCountry = findCol(headers, ["Shipping Country"]);
-      const shipPhone = findCol(headers, ["Shipping Phone"]);
+      const shipCompany = findCol(headers, ["Shipping Company", "Company (Shipping)"]);
+      const shipCity = findCol(headers, ["Shipping City", "City (Shipping)"]);
+      const shipZip = findCol(headers, ["Shipping Zip", "Postcode (Shipping)"]);
+      const shipProvince = findCol(headers, ["Shipping Province", "State Code (Shipping)"]);
+      const shipCountry = findCol(headers, ["Shipping Country", "Country Code (Shipping)"]);
+      const shipPhone = findCol(headers, ["Shipping Phone", "Phone (Shipping)", "Phone (Billing)"]);
+      const billA1 = findCol(headers, ["Address 1&2 (Billing)", "Billing Address 1"]);
+      const billCity = findCol(headers, ["City (Billing)"]);
+      const billProvince = findCol(headers, ["State Code (Billing)"]);
+      const billZip = findCol(headers, ["Postcode (Billing)"]);
+      const billCountry = findCol(headers, ["Country Code (Billing)"]);
       const addrIdx = findCol(headers, ["Shipping Address", "Address", "Billing Address 1", "Shipping Address 1", "Address1 (Shipping)"]);
       const refIdx = findCol(headers, ["Order Number", "Order ID", "Name", "Order"]);
       const curIdx = findCol(headers, ["Currency", "Order Currency", "Currency Code"]);
@@ -883,10 +914,15 @@ function App() {
         custAddr = "",
         ref = "",
         cur = "";
+      const seenOrders = {};
       for (let r = 1; r < rows.length; r++) {
         const cells = rows[r];
-        const name = (cells[nameIdx] || "").trim();
+        const name = cleanName(cells[nameIdx]);
         if (!name) continue;
+        if (refIdx !== -1) {
+          const orderVal = (cells[refIdx] || "").trim();
+          if (orderVal) seenOrders[orderVal] = true;
+        }
         const qty = parseFloat((cells[qtyIdx] || "1").replace(/[^0-9.]/g, "")) || 1;
         const price = priceIdx !== -1 ? parseFloat((cells[priceIdx] || "0").replace(/[^0-9.]/g, "")) || 0 : 0;
         newItems.push({
@@ -895,10 +931,14 @@ function App() {
           qty: Math.round(qty),
           unitPrice: price
         });
-        if (!custName && custIdx !== -1) custName = (cells[custIdx] || "").trim();
+        const pick = i => i !== -1 ? (cells[i] || "").trim() : "";
+        if (!custName) {
+          const shipName = [pick(firstShip), pick(lastShip)].filter(Boolean).join(" ");
+          const billName = [pick(firstBill), pick(lastBill)].filter(Boolean).join(" ");
+          custName = shipName || billName || pick(custIdx);
+        }
         if (!custAddr) {
           const parts = [];
-          const pick = i => i !== -1 ? (cells[i] || "").trim() : "";
           const street = pick(shipStreet) || pick(shipA1);
           if (pick(shipCompany)) parts.push(pick(shipCompany));
           if (street) parts.push(street);
@@ -906,11 +946,22 @@ function App() {
           const cityLine = [pick(shipCity), pick(shipProvince), pick(shipZip)].filter(Boolean).join(", ");
           if (cityLine) parts.push(cityLine);
           if (pick(shipCountry)) parts.push(pick(shipCountry));
+          if (parts.length === 0) {
+            const bStreet = pick(billA1);
+            if (bStreet) parts.push(bStreet);
+            const bCityLine = [pick(billCity), pick(billProvince), pick(billZip)].filter(Boolean).join(", ");
+            if (bCityLine) parts.push(bCityLine);
+            if (pick(billCountry)) parts.push(pick(billCountry));
+          }
           if (pick(shipPhone)) parts.push("Tel: " + pick(shipPhone));
           if (parts.length > 0) custAddr = parts.join("\n");else if (addrIdx !== -1) custAddr = (cells[addrIdx] || "").trim();
         }
         if (!ref && refIdx !== -1) ref = (cells[refIdx] || "").trim();
         if (!cur && curIdx !== -1) cur = (cells[curIdx] || "").trim();
+      }
+      if (Object.keys(seenOrders).length > 1) {
+        setCsvNote("This file has more than one order in it (" + Object.keys(seenOrders).length + " orders). Please export just one order from WooCommerce and try again.");
+        return;
       }
       if (newItems.length === 0) {
         setCsvNote("No item rows found in the file.");
