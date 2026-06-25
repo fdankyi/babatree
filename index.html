@@ -3,7 +3,18 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Baba Tree"/>
 <title>The Baba Tree - Order Tool</title>
+<script>
+/* Registers the offline helper so the app keeps a copy on the device */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
+</script>
 <script>
 /* Shows real errors on screen instead of a blank white page (helpful on iPad) */
 window.onerror = function(msg, src, line, col) {
