@@ -1,6 +1,6 @@
 /* The Baba Tree - offline helper (service worker)
    Keeps a copy of the app on the device so it works with no internet. */
-const CACHE = 'babatree-v12';
+const CACHE = 'babatree-v27';
 const ASSETS = ['./', './index.html'];
 
 self.addEventListener('install', function (event) {
